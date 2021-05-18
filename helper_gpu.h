@@ -7,7 +7,7 @@
 
 #include <assert.h>
 
-#include "cuda.h"
+#include "helper_cuda.h"
 
 inline void gpuDevice(int device = 0) {
     checkCudaErrors(cudaSetDevice(device));
