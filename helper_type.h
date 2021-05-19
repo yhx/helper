@@ -2,8 +2,8 @@
  * usually just for fun
  * Thu October 22 2015
  */
-#ifndef CONSTANT_H
-#define CONSTANT_H
+#ifndef HELPER_TYPE_H
+#define HELPER_TYPE_H
 
 #include <stddef.h>
 #include <limits.h>
@@ -49,17 +49,5 @@ typedef double real;
 
 const real ZERO = 1e-10;
 
-const int MAX_BLOCK_SIZE = 1024;
-const int WARP_SIZE = 32;
-
-const int DECAY_MULTIPLE_TAU = 5;
-
-const int DATA_TAG = 0x1000000;
-const int MSG_TAG = 0;
-const int DNET_TAG = 100000;
-const int NET_TAG = 10000;
-const int TYPE_TAG = 200;
-const int CONN_TAG = 200;
-
-#endif /* CONSTANT_H */
+#endif /* HELPER_TYPE_H */
 

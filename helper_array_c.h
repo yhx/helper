@@ -2,40 +2,94 @@
  * usually just for fun
  * Sun December 13 2015
  */
-#ifndef UTILS_H
-#define UTILS_H
+#ifndef HELPER_ARRAY_C_H
+#define HELPER_ARRAY_C_H
 
 #include <stdio.h>
 #include <math.h>
 #include <typeinfo>
 
-#include "../third_party/json/json.h"
-#include "../base/type.h"
+// #include "../third_party/json/json.h"
+#include "helper_type.h"
 #include "helper_c.h"
 
 static bool rand_seed_inited = false;
 
-double realRandom(double range);
-
-int getIndex(Type *array, int size, Type type);
-int getType(int *array, int size, int index);
-int getOffset(int *array, int size, int index);
-
-Json::Value testValue(Json::Value value, unsigned int idx);
-
-real *loadArray(const char *filename, int size);
-int saveArray(const char *filename, real *array, int size);
-
-void print_mem(const char *info);
+template<typename T>
+T real_rand(T range)
+{
+	long f = rand();
+	return static_cast<T>((static_cast<double>(f/RAND_MAX)*range));
+}
 
 template<typename T>
-bool compareArray(T *a, T *b, int size) 
+long long get_index(T *array, size_t size, T elem)
 {
-	bool equal = true;
-	for (int i=0; i<size; i++) {
-		equal = equal && (a[i] == b[i]);
+	for (size_t i=0; i<size; i++) {
+		if (array[i] == elem) {
+			return i;
+		}
 	}
-	return equal;
+
+	return -1;
+}
+
+template<typename T>
+long long get_near_index(T *array, size_t size, T elem)
+{
+	for (size_t i=0; i<size-1; i++) {
+		if (array[i+1] > elem) {
+			return i;
+		}
+	}
+
+	//printf("ERROR: Cannot find index %d !!!\n", index);
+	return -1;
+}
+
+template<typename T>
+T get_diff(int *array, size_t size, T elem)
+{
+	for (size_t i=0; i<size-1; i++) {
+		if (array[i+1] > elem) {
+			return (elem - array[i]);
+		}
+	}
+
+	return elem - array[size-1];
+}
+
+template<typename T>
+T *load_array(const char *name, size_t size)
+{
+	FILE *f = fopen(name, "rb+");
+	if (f == NULL) {
+		printf("ERROR: Open file %s failed\n", name);
+		return NULL;
+	}
+
+	T *res = malloc_c<T>(size);
+	fread_c(res, size, f);
+
+	fflush(f);
+	fclose(f);
+
+	return res;
+}
+
+template<typename T>
+int save_array(const char *name, T *array, size_t size)
+{
+	FILE *f = fopen(name, "wb+");
+	if (f == NULL) {
+		printf("ERROR: Open file %s failed\n", name);
+		return -1;
+	}
+	fwrite_c(array, size, f);
+	fflush(f);
+	fclose(f);
+
+	return 0;
 }
 
 inline int upzero_else_set_one(int value) {
@@ -47,24 +101,24 @@ inline int upzero_else_set_one(int value) {
 }
 
 template<typename T>
-T *getRandomArray(T range, size_t size) {
+T *get_rand_array(T range, size_t size) {
 	if (!rand_seed_inited) {
 		srand(time(NULL));
 		rand_seed_inited = true;
 	}
 
-	T *res = new T[size];
+	T *res = malloc_c<T>(size);
 	for (size_t i=0; i<size; i++) {
-		res[i] = static_cast<T>(realRandom(static_cast<double>(range)));
+		res[i] = static_cast<T>(real_rand(static_cast<double>(range)));
 	}
 
 	return res;
 }
 
 template<typename T>
-T *getConstArray(T value, size_t size)
+T *get_const_array(T value, size_t size)
 {
-	T *res = new T[size];
+	T *res = malloc_c<T>(size);
 	for (size_t i=0; i<size; i++) {
 		res[i] = value;
 	}
@@ -73,13 +127,13 @@ T *getConstArray(T value, size_t size)
 }
 
 template<typename T>
-void delArray(T *value)
+void free_array(T *value)
 {
-	delete[] value;
+	free(value);
 }
 
 template<typename T>
-bool isEqualArray(T const & a, T const & b, size_t size)
+bool is_equal_array(T const & a, T const & b, size_t size)
 {
 	for (size_t i=0; i<size; i++) {
 		if (fabs(a[i] - b[i]) > 1e-10) {
@@ -90,7 +144,7 @@ bool isEqualArray(T const & a, T const & b, size_t size)
 }
 
 template<typename T, typename T1>
-bool isEqualArray(T const & a, T const & b, size_t size, T1 *shuffle1=NULL, T1 *shuffle2=NULL)
+bool is_equal_array(T const & a, T const & b, size_t size, T1 *shuffle1=NULL, T1 *shuffle2=NULL)
 {
 	for (size_t i=0; i<size; i++) {
 		if (shuffle1 != NULL && shuffle2 !=NULL)  {
@@ -128,30 +182,6 @@ void log_array(FILE *f, T *array, size_t size)
 }
 
 
-template<typename T>
-void del_content_vec(T &vec)
-{
-	for (auto iter = vec.begin(); iter != vec.end();  iter++) {
-		if (!(*iter)) {
-			continue;
-		}
-		delete (*iter);
-	}
-	vec.clear();
-}
-
-template<typename T>
-void del_content_map(T &map)
-{
-	for (auto iter = map.begin(); iter != map.end();  iter++) {
-		if (!(iter->second)) {
-			continue;
-		}
-		delete (iter->second);
-	}
-	map.clear();
-}
-
 template<typename T1, typename T2>
 T1 *shuffle(T1 *array, T2 *idx, size_t size)
 {
@@ -171,8 +201,4 @@ void shuffle(T1 * res, T1 *array, T2 *idx, size_t size)
 	}
 }
 
-void system_c(const char *cmd);
-
-void mkdir(const char *cmd);
-
-#endif /* UTILS_H */
+#endif /* HELPER_ARRAY_C_H */
