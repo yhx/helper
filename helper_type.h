@@ -6,8 +6,8 @@
 #define HELPER_TYPE_H
 
 #include <stddef.h>
+#include <stdint.h>
 #include <limits.h>
-#include "mpi.h"
 
 // typedef unsigned long long uinteger_t;
 // #define UINTEGER_T_MAX ULL_MAX;
