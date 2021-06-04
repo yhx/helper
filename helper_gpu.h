@@ -98,5 +98,22 @@ void copyFromGPU(T* cpu, T* gpu, size_t size = 1)
 	checkCudaErrors(cudaMemcpy(cpu, gpu, sizeof(T)*size, cudaMemcpyDeviceToHost));
 }
 
+
+template<typename DATA, typename SIZE>
+__device__ int merge2array(DATA *src, const SIZE size, DATA *target, SIZE * global_size, const SIZE offset) 
+{
+	__shared__ volatile SIZE start_loc;
+	if (threadIdx.x == 0) {
+		start_loc = atomicAdd(global_size, size);
+	}
+	__syncthreads();
+
+	for (SIZE idx=threadIdx.x; idx<size; idx+=blockDim.x) {
+		global_buf[offset + start_loc + idx] = shared_buf[idx];
+	}
+
+	return 0;
+}
+
 #endif /* HELPER_GPU_H */
 
