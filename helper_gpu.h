@@ -9,6 +9,8 @@
 
 #include "helper_cuda.h"
 
+#define GPU_CHECK(val) check ( (val), #val, file, line )
+
 inline void gpuDevice(int device = 0) {
     checkCudaErrors(cudaSetDevice(device));
 }
@@ -58,6 +60,14 @@ void gpuMemcpyPeer(T*data_d, int dst, T*data_s, int src, size_t size = 1)
 	assert(data_d);
 	assert(data_s);
 	checkCudaErrors(cudaMemcpyPeer(data_d, dst, data_s, src, sizeof(T)*(size)));
+}
+
+template<typename T>
+void gpuMemcpy(T*data_d, T*data_s, size_t size = 1)
+{
+	assert(data_d);
+	assert(data_s);
+	checkCudaErrors(cudaMemcpy(data_d, data_s, sizeof(T)*(size), cudaMemcpyDeviceToDevice));
 }
 
 template<typename T>
