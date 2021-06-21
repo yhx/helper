@@ -9,6 +9,8 @@
 
 #include "helper_cuda.h"
 
+const int MAX_BLOCK_SIZE = 512;
+
 #define GPU_CHECK(val) check ( (val), #val, file, line )
 
 inline void gpuDevice(int device = 0) {
