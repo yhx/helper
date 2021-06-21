@@ -110,16 +110,16 @@ void copyFromGPU(T* cpu, T* gpu, size_t size = 1)
 
 
 template<typename DATA, typename SIZE>
-__device__ int merge2array(DATA *src, const SIZE size, DATA *target, SIZE * global_size, const SIZE offset) 
+__device__ int merge2array(DATA *src, const SIZE size, DATA *dst, SIZE * dst_size, const SIZE dst_offset) 
 {
 	__shared__ volatile SIZE start_loc;
 	if (threadIdx.x == 0) {
-		start_loc = atomicAdd(global_size, size);
+		start_loc = atomicAdd(dst_size, size);
 	}
 	__syncthreads();
 
 	for (SIZE idx=threadIdx.x; idx<size; idx+=blockDim.x) {
-		global_buf[offset + start_loc + idx] = shared_buf[idx];
+		dst[dst_offset + start_loc + idx] = src[idx];
 	}
 
 	return 0;
