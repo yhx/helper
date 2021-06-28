@@ -19,12 +19,14 @@
 typedef unsigned int uinteger_t;
 #define UINTEGER_T_MAX UINT_MAX
 #define MPI_UINTEGER_T MPI_UNSIGNED
-#define PT_UINTEGER_T(prev, next) prev "%u" next
+#define FT_UINTEGER_T "%u"
+#define PT_UINTEGER_T(prev, next) prev FT_UINTEGER_T next
 
 typedef int integer_t;
 #define INTEGER_T_MAX INT_MAX
 #define MPI_INTEGER_T MPI_INT
-#define PT_INTEGER_T(prev, next) prev "%d" next
+#define FT_INTEGER_T "%d" 
+#define PT_INTEGER_T(prev, next) prev FT_INTEGER_T next
 
 // #ifdef USE_GPU
 #define NCCL_INTEGER_T ncclInt32
