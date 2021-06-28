@@ -13,13 +13,26 @@
 // #define UINTEGER_T_MAX ULL_MAX;
 // #define MPI_UINTEGER_T MPI_UNSIGNED_LONG_LONG
 
+#ifndef INTEGER_T
+#define INTEGER_T
+
 typedef unsigned int uinteger_t;
 #define UINTEGER_T_MAX UINT_MAX
 #define MPI_UINTEGER_T MPI_UNSIGNED
+#define PT_UINTEGER_T(prev, next) prev "%u" next
 
 typedef int integer_t;
 #define INTEGER_T_MAX INT_MAX
 #define MPI_INTEGER_T MPI_INT
+#define PT_INTEGER_T(prev, next) prev "%d" next
+
+// #ifdef USE_GPU
+#define NCCL_INTEGER_T ncclInt32
+#define NCCL_UINTEGER_T ncclUint32 
+// #endif
+
+#endif // INTEGER_T
+
 
 #ifndef USE_DOUBLE
 typedef float real;
