@@ -127,9 +127,10 @@ T *get_const_array(T value, size_t size)
 }
 
 template<typename T>
-void free_array(T *value)
+T* free_array(T *value)
 {
 	free(value);
+	return NULL;
 }
 
 template<typename T>

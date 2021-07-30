@@ -8,6 +8,8 @@
 #include <iostream>
 #include <assert.h>
 
+#define free_clear(x) x = free_c(x)
+
 inline FILE * fopen_c(const char *filename, const char *mode) 
 {
 	FILE * file = fopen(filename, mode);
@@ -41,6 +43,7 @@ void fwrite_c(const T *ptr, size_t memb, FILE *stream)
 template<typename T>
 T * malloc_c(size_t size = 1)
 {
+	assert(size > 0);
 	T *ret = NULL;
 	ret = static_cast<T*>(malloc(sizeof(T) * (size)));
 	assert(ret != NULL);
@@ -49,10 +52,10 @@ T * malloc_c(size_t size = 1)
 }
 
 template<typename T>
-void  free_c(T *array)
+T*  free_c(T *array)
 {
 	free(array);
-	array = NULL;
+	return NULL;
 }
 
 template<typename T>

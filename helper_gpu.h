@@ -13,6 +13,9 @@ const int MAX_BLOCK_SIZE = 512;
 
 #define GPU_CHECK(val) check ( (val), #val, file, line )
 
+#define gpu_free_clear(var) var = gpuFree(var)
+#define gpuFreeClear gpu_free_clear
+
 inline void gpuDevice(int device = 0) {
     checkCudaErrors(cudaSetDevice(device));
 }
@@ -43,17 +46,19 @@ void gpuMemset(T* array, int c, size_t size = 1)
 }
 
 template<typename T>
-void hostFree(T* cpu)
+T* hostFree(T* cpu)
 {
 	assert(cpu);
 	checkCudaErrors(cudaFreeHost(cpu));
+	return NULL;
 }
 
 template<typename T>
-void gpuFree(T* gpu)
+T* gpuFree(T* gpu)
 {
 	assert(gpu);
 	checkCudaErrors(cudaFree(gpu));
+	return NULL;
 }
 
 template<typename T>
