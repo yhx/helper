@@ -62,7 +62,7 @@ typedef double real;
    #error "unsupported size_t"
 #endif
 
-const real ZERO = 1e-10;
+// const real ZERO = 1e-10;
 
 #endif /* HELPER_TYPE_H */
 
