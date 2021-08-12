@@ -16,6 +16,8 @@ const int MAX_BLOCK_SIZE = 512;
 #define gpu_free_clear(var) var = gpuFree(var)
 #define gpuFreeClear gpu_free_clear
 
+#define TOGPU(pt, num) 
+
 inline void gpuDevice(int device = 0) {
     checkCudaErrors(cudaSetDevice(device));
 }
@@ -76,6 +78,22 @@ void gpuMemcpy(T*data_d, T*data_s, size_t size = 1)
 	assert(data_s);
 	checkCudaErrors(cudaMemcpy(data_d, data_s, sizeof(T)*(size), cudaMemcpyDeviceToDevice));
 }
+
+template<typename T>
+T* toGPU(T* cpu, size_t size, char const *const func, const char *const file, int const line)
+{
+	T * ret;
+	if (!cpu) {
+		printf("Warn: null cpu pointer at %s:%d %s\n", file, line, func);
+		return NULL;
+	}
+
+	check(cudaMalloc((void**)&(ret), sizeof(T) * size), func, file, line);
+	check(cudaMemcpy(ret, cpu, sizeof(T)*size, cudaMemcpyHostToDevice), func, file, line);
+
+	return ret;
+}
+
 
 template<typename T>
 T* copyToGPU(T* cpu, size_t size = 1)
