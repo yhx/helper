@@ -18,8 +18,15 @@ const int MAX_BLOCK_SIZE = 512;
 
 #define TOGPU(pt, num) 
 
-inline void gpuDevice(int device = 0) {
+inline void gpuSetDevice(int device = 0) {
+	assert(device > 0);
     checkCudaErrors(cudaSetDevice(device));
+}
+
+inline int gpuGetDevice() {
+	int device = -1;
+    checkCudaErrors(cudaGetDevice(&device));
+	return device;
 }
 
 template<typename T>
