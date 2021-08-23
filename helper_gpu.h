@@ -16,7 +16,7 @@ const int MAX_BLOCK_SIZE = 512;
 #define gpu_free_clear(var) var = gpuFree(var)
 #define gpuFreeClear gpu_free_clear
 
-#define TOGPU(pt, num) 
+#define TOGPU(pt, num) toGPU( (pt), num, #pt, __FILE__, __LINE__)
 
 inline void gpuDevice(int device = 0) {
     checkCudaErrors(cudaSetDevice(device));
@@ -83,6 +83,7 @@ template<typename T>
 T* toGPU(T* cpu, size_t size, char const *const func, const char *const file, int const line)
 {
 	T * ret;
+
 	if (!cpu) {
 		printf("Warn: null cpu pointer at %s:%d %s\n", file, line, func);
 		return NULL;
