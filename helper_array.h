@@ -165,21 +165,69 @@ bool is_equal_array(T const & a, T const & b, size_t size, T1 *shuffle1=NULL, T1
 	return true;
 }
 
-void log_array_noendl(FILE *f, int *array, size_t size);
-void log_array_noendl(FILE *f, unsigned int *array, size_t size);
-void log_array_noendl(FILE *f, long *array, size_t size);
-void log_array_noendl(FILE *f, unsigned long *array, size_t size);
-void log_array_noendl(FILE *f, long long *array, size_t size);
-void log_array_noendl(FILE *f, unsigned long long *array, size_t size);
-void log_array_noendl(FILE *f, float *array, size_t size);
-void log_array_noendl(FILE *f, double *array, size_t size);
+inline void log_array_noendl(FILE *f, int *array, size_t size) {
+	for (size_t i=0; i<size; i++) {
+		fprintf(f, "%d ", array[i]);
+	}
+}
+
+inline void log_array_noendl(FILE *f, unsigned int *array, size_t size) {
+	for (size_t i=0; i<size; i++) {
+		fprintf(f, "%u ", array[i]);
+	}
+}
+
+inline void log_array_noendl(FILE *f, long *array, size_t size) {
+	for (size_t i=0; i<size; i++) {
+		fprintf(f, "%ld ", array[i]);
+	}
+}
+
+inline void log_array_noendl(FILE *f, unsigned long *array, size_t size) {
+	for (size_t i=0; i<size; i++) {
+		fprintf(f, "%lu ", array[i]);
+	}
+}
+
+inline void log_array_noendl(FILE *f, long long *array, size_t size) {
+	for (size_t i=0; i<size; i++) {
+		fprintf(f, "%lld ", array[i]);
+	}
+}
+
+inline void log_array_noendl(FILE *f, unsigned long long *array, size_t size) {
+	for (size_t i=0; i<size; i++) {
+		fprintf(f, "%llu ", array[i]);
+	}
+}
+
+inline void log_array_noendl(FILE *f, float *array, size_t size) {
+	for (size_t i=0; i<size; i++) {
+		fprintf(f, "%lf ", array[i]);
+	}
+}
+
+inline void log_array_noendl(FILE *f, double *array, size_t size) {
+	for (size_t i=0; i<size; i++) {
+		fprintf(f, "%lf ", array[i]);
+	}
+}
 
 
 template<typename T>
-void log_array(FILE *f, T *array, size_t size)
+void log_array(FILE *f, T *array, size_t size, const char *msg="")
 {
+	fprintf(f, "%s ", msg);
 	log_array_noendl(f, array, size);
 	fprintf(f, "\n");
+}
+
+template<typename T>
+void print_array(T *array, size_t size, const char *msg="")
+{
+	fprintf(stdout, "%s ", msg);
+	log_array_noendl(stdout, array, size);
+	fprintf(stdout, "\n");
 }
 
 
