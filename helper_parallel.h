@@ -5,7 +5,7 @@
 #include <mpi.h>
 
 template<typename T>
-void mpi_print_array(T *array, size_t size, const char *msg="", int rank, int proc_num)
+void mpi_print_array(T *array, size_t size, int rank, int proc_num, const char *msg="")
 {
 	for (int i=0; i<proc_num; i++) {
 		if (i == rank) {
