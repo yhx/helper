@@ -64,7 +64,7 @@ template<typename T>
 void gpuMemset(T* array, int c, size_t size = 1)
 { 
 	assert(array);
-	checkCudaErrors(cudaMemset(array, 0, sizeof(T)*(size)));
+	checkCudaErrors(cudaMemset(array, c, sizeof(T)*(size)));
 }
 
 template<typename T>
